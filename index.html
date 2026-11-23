@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title id="pageTitle">Фізика • тест</title>
+<!-- Питань: 8 (дисперсія) + 8 (поляризація) = 16 ✓ | Рівні: 4+4+4+4 = 16 ✓ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@500;700&family=Unbounded:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{font-family:'IBM Plex Sans',system-ui,sans-serif;color:#eaf2ff;min-height:100vh;
+  background:linear-gradient(155deg,#040b1c 0%,#0a1a3f 45%,#101243 100%);background-attachment:fixed;overflow-x:hidden}
+#bg{position:fixed;inset:0;z-index:0;pointer-events:none}
+.hidden{display:none!important}
+.screen{display:none;position:relative;z-index:1;min-height:100vh;min-height:100dvh;flex-direction:column;padding:20px 14px}
+.screen.active{display:flex}
+.inner{margin:auto;width:100%;max-width:840px;display:flex;flex-direction:column;gap:14px}
+.inner.narrow{max-width:560px}
+.glass{background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.13);border-radius:20px;
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.brand{display:flex;align-items:center;gap:10px;padding:12px 18px;font-family:'Unbounded',sans-serif;font-size:.78rem;font-weight:700}
+.brand-topic{opacity:.65;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0;text-align:right}
+.card{padding:28px}
+.center{text-align:center}
+.topic-tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tag{display:inline-block;color:#fff;font-weight:600;font-size:.78rem;padding:5px 12px;border-radius:999px;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.tag-disp{background:linear-gradient(90deg,#8b5cf6,#ec4899,#f59e0b)}
+.tag-pol{background:linear-gradient(90deg,#06b6d4,#3b82f6)}
+h1{font-family:'Unbounded',sans-serif;font-weight:900;font-size:clamp(1.25rem,3.5vw,1.9rem);line-height:1.3;
+  background:linear-gradient(90deg,#8fd3ff,#c9a6ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-family:'Unbounded',sans-serif;font-weight:700}
+.sub{opacity:.75;margin-top:8px;font-size:.92rem}
+.chips{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0}
+.param{color:#ffffff;font-weight:600;font-size:0.95rem;padding:8px 14px;border-radius:999px;
+  text-shadow:0 1px 3px rgba(0,0,0,.55);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.p-blue{background:linear-gradient(135deg,#1f6bff,#00c2ff)}
+.p-violet{background:linear-gradient(135deg,#7b2ff7,#b721ff)}
+.p-teal{background:linear-gradient(135deg,#0ba360,#3cba92)}
+.p-amber{background:linear-gradient(135deg,#d97706,#f59e0b)}
+.field{margin-top:14px;text-align:left}
+.field label{display:block;font-size:.85rem;font-weight:600;opacity:.85;margin-bottom:6px}
+.field input{width:100%;padding:13px 15px;font-size:16px;font-family:inherit;color:#fff;
+  background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);border-radius:12px;outline:none;touch-action:manipulation}
+.field input:focus{border-color:#4da3ff}
+.field input::placeholder{color:rgba(234,242,255,.35)}
+.err{color:#fda4af;font-size:.85rem;min-height:1.1em;margin-top:6px;text-align:left}
+.rules{list-style:none;margin:18px 0;text-align:left;display:flex;flex-direction:column;gap:8px;font-size:.92rem;opacity:.9}
+.btn-main{font-family:'Unbounded',sans-serif;font-weight:700;width:100%;padding:16px;border:none;border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#7c3aed);color:#fff;font-size:.95rem;cursor:pointer;touch-action:manipulation;
+  transition:transform .15s,box-shadow .15s;box-shadow:0 10px 30px rgba(37,99,235,.35)}
+.btn-main:hover{transform:translateY(-2px)}
+.btn-main:disabled{opacity:.6;cursor:default;transform:none}
+.btn-ghost{font-family:inherit;font-weight:600;padding:12px 22px;border-radius:12px;border:1.5px solid rgba(255,255,255,.25);
+  background:rgba(255,255,255,.06);color:#eaf2ff;font-size:.95rem;cursor:pointer;touch-action:manipulation;margin-top:12px}
+.btn-ghost:hover{border-color:#7dd3fc}
+.foot{text-align:center;font-size:.78rem;opacity:.5;padding:6px 0 10px}
+.big-ico{font-size:2.6rem;margin-bottom:10px}
+#screen-block p{margin-top:10px;opacity:.9}
+#blockInfo{font-weight:600;font-size:1.05rem}
+.quiz-top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 18px;flex-wrap:wrap}
+.qt-left{display:flex;flex-direction:column;gap:8px}
+.q-meta{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.lvl{font-size:.75rem;font-weight:600;padding:4px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.25);opacity:.85}
+.q-count{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem}
+.q-sep{opacity:.5;margin:0 6px}
+.qt-right{display:flex;align-items:center;gap:14px}
+.v-chip{font-size:.8rem;font-weight:600;color:#fecaca;border:1px solid rgba(248,113,113,.4);background:rgba(127,29,29,.25);
+  padding:6px 12px;border-radius:999px}
+.timer-wrap{position:relative;width:64px;height:64px;flex:0 0 64px}
+.timer-wrap svg{width:100%;height:100%}
+.rbg{fill:none;stroke:rgba(255,255,255,.12);stroke-width:6}
+.rfg{fill:none;stroke:#38bdf8;stroke-width:6;stroke-linecap:round;stroke-dasharray:213.63;
+  transform:rotate(-90deg);transform-origin:50% 50%;transition:stroke-dashoffset .1s linear,stroke .3s}
+.tnum{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem}
+.timer-wrap.danger .rfg{stroke:#ff4d5e}
+.timer-wrap.danger .tnum{color:#ff6b7a}
+.timer-wrap.danger{animation:pulse .55s infinite alternate}
+@keyframes pulse{from{transform:scale(1)}to{transform:scale(1.09)}}
+.pbar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden}
+#pfill{height:100%;width:0;background:linear-gradient(90deg,#38bdf8,#a78bfa);border-radius:99px;transition:width .4s}
+#screen-quiz{user-select:none;-webkit-user-select:none}
+.q-line{font-size:.78rem;opacity:.55;font-weight:600;margin-bottom:10px}
+.q-text{font-size:clamp(1.02rem,2.4vw,1.25rem);line-height:1.45;margin-bottom:6px}
+.opt{display:flex;gap:12px;align-items:flex-start;width:100%;text-align:left;padding:14px 16px;margin-top:10px;
+  background:rgba(255,255,255,.06);border:1.5px solid rgba(255,255,255,.14);border-radius:14px;color:#eaf2ff;
+  font-size:.98rem;font-family:inherit;line-height:1.4;cursor:pointer;touch-action:manipulation;transition:border-color .15s,background .15s}
+.opt:hover{border-color:#5ab0ff;background:rgba(90,176,255,.1)}
+.opt .letter{flex:0 0 30px;height:30px;border-radius:9px;background:rgba(255,255,255,.12);display:flex;align-items:center;
+  justify-content:center;font-family:'JetBrains Mono',monospace;font-weight:700;font-size:.9rem}
+.opt.picked{border-color:#7dd3fc;background:rgba(125,211,252,.16)}
+.opt:disabled{cursor:default}
+#toasts{position:fixed;top:14px;right:14px;z-index:50;display:flex;flex-direction:column;gap:8px;max-width:calc(100vw - 28px)}
+.toast{background:rgba(127,29,29,.92);border:1px solid rgba(248,113,113,.5);color:#fecaca;padding:10px 14px;border-radius:12px;
+  font-size:.85rem;font-weight:600;backdrop-filter:blur(6px);box-shadow:0 10px 26px rgba(0,0,0,.4);animation:slideIn .25s}
+@keyframes slideIn{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:none}}
+.fs-overlay{position:fixed;inset:0;z-index:40;background:rgba(3,8,20,.92);backdrop-filter:blur(8px);display:flex;padding:20px}
+.fs-box{margin:auto;max-width:420px;width:100%;padding:30px;text-align:center}
+.fs-box p{margin:12px 0 18px;font-weight:600}
+.fs-ico{font-size:2.4rem}
+.res-name{opacity:.8;margin-top:6px;font-size:.95rem}
+.grade-wrap{position:relative;width:170px;height:170px;margin:20px auto 6px}
+.grade-wrap svg{width:100%;height:100%}
+.gfg{fill:none;stroke:url(#gg);stroke-width:12;stroke-linecap:round;transform:rotate(-90deg);transform-origin:50% 50%;
+  transition:stroke-dashoffset 1.1s cubic-bezier(.22,.8,.3,1)}
+.grade-wrap .rbg{stroke-width:12}
+.grade-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:2.6rem}
+.gmax{font-size:1.2rem;opacity:.55;margin-left:2px}
+.auto-note{color:#fda4af;background:rgba(127,29,29,.3);border:1px solid rgba(248,113,113,.4);
+  border-radius:12px;padding:10px 14px;font-size:.88rem;font-weight:600;margin:10px 0}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:16px 0}
+.stat{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:14px;padding:12px 8px;
+  font-family:'JetBrains Mono',monospace;font-weight:700;font-size:1.15rem}
+.stat small{display:block;font-family:'IBM Plex Sans',sans-serif;font-weight:500;font-size:.72rem;opacity:.65;margin-top:4px}
+.stat.ok{color:#6ee7b7}.stat.bad{color:#fca5a5}.stat.skip{color:#cbd5e1}.stat.warn{color:#fcd34d}
+.dots-title{font-size:.85rem;opacity:.7;margin-top:8px}
+.dots{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:12px 0}
+.dot{width:14px;height:14px;border-radius:50%;display:inline-block}
+.d-ok{background:#34d399}.d-bad{background:#f87171}.d-skip{background:#64748b}
+.legend{display:flex;gap:16px;justify-content:center;font-size:.78rem;opacity:.75;flex-wrap:wrap}
+.legend span{display:flex;align-items:center;gap:6px}
+.legend .dot{width:10px;height:10px}
+.tg-status{margin-top:16px;font-size:.88rem;font-weight:600;opacity:.9}
+.tg-ok{color:#6ee7b7}.tg-err{color:#fca5a5}
+@media (max-width:700px),(pointer:coarse){
+  body{background-attachment:scroll}
+  .glass{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(10,18,40,.94)}
+  .toast,.fs-overlay{backdrop-filter:none;-webkit-backdrop-filter:none}
+  .card{padding:20px}
+  .opt{padding:16px}
+  .btn-main{padding:16px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .quiz-top{padding:12px 14px}
+  .brand-topic{display:none}
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div id="toasts"></div>
+
+<!-- СТАРТ -->
+<section id="screen-start" class="screen active">
+  <div class="inner">
+    <header class="brand glass">⚛️ <span>Фізика • <span id="classDisplay"></span> клас</span><span class="brand-topic" id="topicDisplay"></span></header>
+    <div class="card glass">
+      <div class="topic-tags"><span class="tag tag-disp">Дисперсія</span><span class="tag tag-pol">Поляризація</span></div>
+      <h1 id="topicTitle"></h1>
+      <p class="sub"><span id="totalDisplay2"></span> питань • <span id="levelsDisplay"></span> рівні складності • перемішування щоразу</p>
+      <div class="chips">
+        <span class="param p-blue"><span id="totalDisplay"></span> питань</span>
+        <span class="param p-violet"><span id="timeDisplay"></span> с на питання</span>
+        <span class="param p-teal"><span id="gradeMaxDisplay"></span>-бальна система</span>
+        <span class="param p-amber"><span id="subDisplay"></span> підтеми</span>
+      </div>
+      <div class="field">
+        <label for="inpName">Прізвище та ім'я</label>
+        <input id="inpName" type="text" autocomplete="off" placeholder="напр., Шевченко Тарас">
+        <div id="nameErr" class="err"></div>
+      </div>
+      <div class="field">
+        <label for="inpGroup">Група / клас</label>
+        <input id="inpGroup" type="text" autocomplete="off">
+      </div>
+      <ul class="rules">
+        <li>🖥 Тест проходить у повноекранному режимі</li>
+        <li>⏱ На кожне питання — <span id="timeDisplay2"></span> секунд</li>
+        <li>📨 Результат надсилається вчителю</li>
+      </ul>
+      <button id="btnStart" type="button" class="btn-main">Розпочати тест</button>
+    </div>
+    <footer class="foot">Фізика • <span id="classDisplay3"></span> клас • оцінювання за <span id="gradeMaxDisplay2"></span>-бальною шкалою</footer>
+  </div>
+</section>
+
+<!-- БЛОКУВАННЯ -->
+<section id="screen-block" class="screen">
+  <div class="inner narrow">
+    <div class="card glass center">
+      <div class="big-ico">🔒</div>
+      <h2>Спробу вже використано</h2>
+      <p id="blockName"></p>
+      <p id="blockInfo"></p>
+      <p id="blockDate"></p>
+      <p style="font-size:.85rem;opacity:.65">Якщо це помилка — зверніться до вчителя.</p>
+      <button id="btnBack" type="button" class="btn-ghost">Назад</button>
+    </div>
+  </div>
+</section>
+
+<!-- ТЕСТ -->
+<section id="screen-quiz" class="screen">
+  <div class="inner">
+    <div class="quiz-top glass">
+      <div class="qt-left">
+        <div class="q-meta"><span class="tag" id="qTag"></span><span class="lvl" id="qLvl"></span></div>
+        <div class="q-count"><span id="qNum">01</span><span class="q-sep">/</span><span id="qTotal"></span></div>
+      </div>
+      <div class="qt-right">
+        <div class="v-chip">⚠ Порушень: <span id="vCount">0</span>/<span id="vMaxDisplay"></span></div>
+        <div class="timer-wrap" id="timerWrap">
+          <svg viewBox="0 0 80 80"><circle class="rbg" cx="40" cy="40" r="34"/><circle class="rfg" id="timerArc" cx="40" cy="40" r="34"/></svg>
+          <div class="tnum" id="timerNum"></div>
+        </div>
+      </div>
+    </div>
+    <div class="pbar"><div id="pfill"></div></div>
+    <div class="card glass">
+      <div class="q-line">Фізика • <span id="classDisplay2"></span> клас</div>
+      <h2 id="qText" class="q-text"></h2>
+      <div id="opts"></div>
+    </div>
+  </div>
+</section>
+
+<!-- РЕЗУЛЬТАТИ -->
+<section id="screen-result" class="screen">
+  <div class="inner narrow">
+    <div class="card glass center">
+      <h2>Тест завершено</h2>
+      <p class="res-name" id="resName"></p>
+      <div class="grade-wrap">
+        <svg viewBox="0 0 160 160">
+          <defs><linearGradient id="gg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#38bdf8"/><stop offset="1" stop-color="#a78bfa"/></linearGradient></defs>
+          <circle class="rbg" cx="80" cy="80" r="70"/>
+          <circle id="gradeArc" class="gfg" cx="80" cy="80" r="70"/>
+        </svg>
+        <div class="grade-num"><span id="gradeNum">0</span><span class="gmax">/<span id="gradeMaxDisplay3"></span></span></div>
+      </div>
+      <div id="autoNote" class="auto-note hidden">🚫 Автозавершення через порушення — 0 балів</div>
+      <div class="stats">
+        <div class="stat ok">✔ <span id="stCorrect">0</span><small>правильно</small></div>
+        <div class="stat bad">✖ <span id="stWrong">0</span><small>помилки</small></div>
+        <div class="stat skip">⏱ <span id="stSkip">0</span><small>пропуски</small></div>
+        <div class="stat warn">⚠ <span id="stViol">0</span><small>порушення</small></div>
+      </div>
+      <p class="dots-title">Ваші відповіді • <span id="totalDisplay3"></span> питань</p>
+      <div id="dots" class="dots"></div>
+      <div class="legend">
+        <span><i class="dot d-ok"></i> правильно</span>
+        <span><i class="dot d-bad"></i> помилка</span>
+        <span><i class="dot d-skip"></i> пропуск</span>
+      </div>
+      <div id="tgStatus" class="tg-status"></div>
+      <button id="btnRetry" type="button" class="btn-ghost hidden">Надіслати ще раз</button>
+    </div>
+    <footer class="foot">Фізика • <span id="classDisplay4"></span> клас</footer>
+  </div>
+</section>
+
+<!-- ОВЕРЛЕЙ ПОВНОЕКРАННОГО РЕЖИМУ -->
+<div id="fsOverlay" class="fs-overlay hidden">
+  <div class="fs-box glass">
+    <div class="fs-ico">🖥</div>
+    <p>Повноекранний режим вимкнено</p>
+    <button id="btnFs" type="button" class="btn-main">Повернутися до тесту</button>
+  </div>
+</div>
+
+<script>
+/* ================= 1) КОНСТАНТИ + МИТТЄВЕ ЗАПОВНЕННЯ DOM ================= */
+var CLASS = 11;
+var TOTAL = 16;
+var QUESTION_TIME = 12;
+var GRADE_MAX = 11;          /* шкала ЗАВЖДИ 11-бальна, не залежить від CLASS */
+var LEVELS = 4;
+var SUBTOPIC_COUNT = 2;
+var MAX_VIOLATIONS = 3;
+var TOPIC = 'Дисперсія світла. Поляризація світла';
+
+document.title = 'Фізика • ' + CLASS + ' клас — ' + TOPIC;
+document.getElementById('classDisplay').textContent = CLASS;
+document.getElementById('classDisplay2').textContent = CLASS;
+document.getElementById('classDisplay3').textContent = CLASS;
+document.getElementById('classDisplay4').textContent = CLASS;
+document.getElementById('totalDisplay').textContent = TOTAL;
+document.getElementById('totalDisplay2').textContent = TOTAL;
+document.getElementById('totalDisplay3').textContent = TOTAL;
+document.getElementById('qTotal').textContent = TOTAL;
+document.getElementById('timeDisplay').textContent = QUESTION_TIME;
+document.getElementById('timeDisplay2').textContent = QUESTION_TIME;
+document.getElementById('timerNum').textContent = QUESTION_TIME;
+document.getElementById('gradeMaxDisplay').textContent = GRADE_MAX;
+document.getElementById('gradeMaxDisplay2').textContent = GRADE_MAX;
+document.getElementById('gradeMaxDisplay3').textContent = GRADE_MAX;
+document.getElementById('subDisplay').textContent = SUBTOPIC_COUNT;
+document.getElementById('levelsDisplay').textContent = LEVELS;
+document.getElementById('vMaxDisplay').textContent = MAX_VIOLATIONS;
+document.getElementById('topicDisplay').textContent = TOPIC;
+document.getElementById('topicTitle').textContent = TOPIC;
+document.getElementById('inpGroup').placeholder = 'напр., ' + CLASS + '-Б';
+
+/* ================= 2) БЕЗПЕЧНЕ КОДУВАННЯ + КОНФІГУРАЦІЯ ================= */
+function safeBtoa(str){
+  try{ return btoa(unescape(encodeURIComponent(str))); }
+  catch(e){
+    try{
+      var h = 0, i;
+      for(i = 0; i < str.length; i++){ h = ((h << 5) - h + str.charCodeAt(i)) | 0; }
+      return 'h' + Math.abs(h);
+    }catch(e2){ return 'test'; }
+  }
+}
+var APPS_SCRIPT_URL = '';   /* ⬅ ВСТАВТЕ URL веб-застосунку Google Apps Script (закінчується на /exec) */
+var SECRET = 'fiz11-2026-secret';
+var TEST_ID = safeBtoa(TOPIC + '|' + CLASS);
+var keyId = TEST_ID.replace(/[^A-Za-z0-9]/g, '');
+var REG_KEY = 'reg_' + keyId;
+var TG_TOKEN = '8977852457:AAH1jJz54Wb5WFxNn1CrpBlRKbML7Pf_2zs';
+var TG_CHAT = '622617127';
+
+/* ================= 3) ПИТАННЯ: 8 (дисперсія) + 8 (поляризація) = 16 ✓ ================= */
+/* t — підтема, l — рівень (1..4), k — тип (know/calc), c — індекс правильної (перемішується при старті) */
+var QUESTIONS = [
+  /* --- Дисперсія світла (8) --- */
+  {t:'disp',l:1,k:'know',q:'Дисперсія світла — це…',
+   a:['залежність показника заломлення речовини від частоти (кольору) світла','огинання світлом перешкод на своєму шляху','накладання когерентних хвиль з утворенням максимумів і мінімумів','впорядкування коливань світлової хвилі в одній площині'],c:0},
+  {t:'disp',l:1,k:'calc',q:'Швидкість світла в деякому середовищі у 2 рази менша, ніж у вакуумі. Чому дорівнює показник заломлення цього середовища?',
+   a:['2','4','5','10'],c:0},
+  {t:'disp',l:2,k:'know',q:'Яке світло найсильніше відхиляється від початкового напрямку після проходження скляної призми?',
+   a:['фіолетове','червоне','жовте','зелене'],c:0},
+  {t:'disp',l:2,k:'know',q:'Хто перший дослідив розкладання білого світла у спектр за допомогою скляної призми?',
+   a:['Ісаак Ньютон','Християн Гюйгенс','Джеймс Максвелл','Генріх Герц'],c:0},
+  {t:'disp',l:3,k:'calc',q:'Показник заломлення середовища дорівнює 2. У скільки разів швидкість світла в цьому середовищі менша, ніж у вакуумі?',
+   a:['у 2 рази','у 4 рази','у 5 разів','швидкість не змінюється'],c:0},
+  {t:'disp',l:3,k:'calc',q:'Світло переходить із вакууму в середовище з показником заломлення 2. Що відбувається з довжиною хвилі цього світла?',
+   a:['зменшується у 2 рази','збільшується у 2 рази','зменшується у 4 рази','не змінюється'],c:0},
+  {t:'disp',l:4,k:'calc',q:'Показник заломлення середовища А дорівнює 2, а середовища Б — 4. У скільки разів швидкість світла в середовищі А більша, ніж у середовищі Б?',
+   a:['у 2 рази','у 4 рази','у 5 разів','швидкості однакові'],c:0},
+  {t:'disp',l:4,k:'know',q:'Чому фіолетове світло відхиляється скляною призмою сильніше, ніж червоне?',
+   a:['показник заломлення скла для фіолетового світла більший, ніж для червоного','швидкість фіолетового світла у склі більша, ніж червоного','частота фіолетового світла менша, ніж червоного','довжина хвилі фіолетового світла більша, ніж червоного'],c:0},
+  /* --- Поляризація світла (8) --- */
+  {t:'pol',l:1,k:'know',q:'Поляризоване світло — це світло, у якому…',
+   a:['коливання вектора E відбуваються впорядковано, в одному напрямку','коливання вектора E відбуваються хаотично в усіх напрямках','усі хвилі мають однакову частоту','коливання відбуваються лише вздовж напрямку поширення'],c:0},
+  {t:'pol',l:1,k:'calc',q:'На ідеальний поляризатор падає природне світло інтенсивністю 100 ум. од. Яка інтенсивність світла після поляризатора?',
+   a:['50 ум. од.','100 ум. од.','200 ум. од.','20 ум. од.'],c:0},
+  {t:'pol',l:2,k:'know',q:'Явище поляризації світла доводить, що світлові хвилі є…',
+   a:['поперечними','поздовжніми','механічними','стоячими'],c:0},
+  {t:'pol',l:2,k:'calc',q:'Природне світло інтенсивністю 20 ум. од. проходить крізь ідеальний поляризатор. Яка інтенсивність світла на виході?',
+   a:['10 ум. од.','20 ум. од.','5 ум. од.','4 ум. од.'],c:0},
+  {t:'pol',l:3,k:'calc',q:'Після ідеального поляризатора інтенсивність світла стала 50 ум. од. Якою була інтенсивність природного світла до поляризатора?',
+   a:['100 ум. од.','200 ум. од.','50 ум. од.','10 ум. од.'],c:0},
+  {t:'pol',l:3,k:'calc',q:'Ідеальний поляризатор зменшив інтенсивність природного світла до 10 ум. од. Якою була початкова інтенсивність світла?',
+   a:['20 ум. од.','10 ум. од.','5 ум. од.','100 ум. од.'],c:0},
+  {t:'pol',l:4,k:'calc',q:'Головні площини поляризатора й аналізатора взаємно перпендикулярні. На аналізатор падає поляризоване світло інтенсивністю 100 ум. од. Яка інтенсивність на виході з аналізатора?',
+   a:['0','50 ум. од.','100 ум. од.','200 ум. од.'],c:0},
+  {t:'pol',l:4,k:'know',q:'Закон Малюса: I = I₀·cos²φ. Що означає кут φ у цій формулі?',
+   a:['кут між напрямком коливань падаючого поляризованого світла та головною площиною аналізатора','кут падіння світла на поверхню аналізатора','кут заломлення світла в аналізаторі','кут між падаючим і відбитим променями'],c:0}
+];
+var SUBMETA = {disp:{label:'Дисперсія',cls:'tag-disp'},pol:{label:'Поляризація',cls:'tag-pol'}};
+var LETTERS = ['А','Б','В','Г'];
+
+/* ================= 4) СТАН ================= */
+var phase = 'start';
+var studentName = '', studentGroup = '', sid = '';
+var order = [], current = 0, answers = [], correctCount = 0, finalGrade = 0, autoFinished = false;
+var violations = 0, lastViol = 0, tId = null, deadline = 0, answered = false;
+var currentRec = null, fsEverEntered = false, checking = false, liveBusy = false;
+var RING_C = 2 * Math.PI * 34;
+var GRADE_C = 2 * Math.PI * 70;
+
+/* ================= 5) ДОПОМІЖНІ ================= */
+function pad2(n){ return (n < 10 ? '0' : '') + n; }
+function shuffle(a){
+  var i, j, t;
+  for(i = a.length - 1; i > 0; i--){ j = Math.floor(Math.random() * (i + 1)); t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+function normName(s){
+  s = String(s || '').toLowerCase();
+  s = s.replace(/['’ʼ`´]/g, '');
+  s = s.replace(/[^0-9a-zа-яіїєґё\s]/g, ' ');
+  var w = s.split(/\s+/), out = [], i;
+  for(i = 0; i < w.length; i++){ if(w[i]) out.push(w[i]); }
+  out.sort();
+  return out.join(' ');
+}
+function hashStr(s){
+  var h = 5381, i;
+  for(i = 0; i < s.length; i++){ h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; }
+  return h.toString(36);
+}
+function makeSid(name){ return hashStr(normName(name)); }
+function nowDate(){
+  var d = new Date(), s;
+  try{ s = d.toLocaleString('uk-UA',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'}); }
+  catch(e){ s = d.toLocaleString(); }
+  return {str:s, ts:d.getTime()};
+}
+function showScreen(id){
+  var ids = ['screen-start','screen-block','screen-quiz','screen-result'], i;
+  for(i = 0; i < ids.length; i++){
+    document.getElementById(ids[i]).classList.toggle('active', ids[i] === id);
+  }
+  window.scrollTo(0,0);
+}
+
+/* ================= 6) ЛОКАЛЬНІ 5 ШАРІВ ================= */
+function attKey(id){ return 'att_' + keyId + '_' + id; }
+function regRead(){
+  try{ var a = JSON.parse(localStorage.getItem(REG_KEY) || '[]'); return (a && a.length !== undefined) ? a : []; }
+  catch(e){ return []; }
+}
+function cookieRead(k){
+  try{
+    var cs = document.cookie ? document.cookie.split(';') : [], i, c;
+    for(i = 0; i < cs.length; i++){
+      c = cs[i].replace(/^\s+/,'');
+      if(c.indexOf(k + '=') === 0) return JSON.parse(decodeURIComponent(c.substring(k.length + 1)));
+    }
+  }catch(e){}
+  return null;
+}
+function cookieDel(k){ try{ document.cookie = k + '=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'; }catch(e){} }
+function wnRead(){ try{ var o = JSON.parse(window.name); if(o && o.k === keyId && o.r) return o.r; }catch(e){} return {}; }
+function wnWrite(rec){ try{ var r = wnRead(); r[rec.id] = rec; window.name = JSON.stringify({k:keyId, r:r}); }catch(e){} }
+function wnDel(id){ try{ var r = wnRead(); delete r[id]; window.name = JSON.stringify({k:keyId, r:r}); }catch(e){} }
+function writeLocal(rec){
+  var k = attKey(rec.id), s = JSON.stringify(rec), i, f = -1, a;
+  try{ localStorage.setItem(k, s); }catch(e){}
+  try{
+    a = regRead();
+    for(i = 0; i < a.length; i++){ if(a[i] && a[i].id === rec.id){ f = i; break; } }
+    if(f >= 0) a[f] = rec; else a.push(rec);
+    localStorage.setItem(REG_KEY, JSON.stringify(a));
+  }catch(e){}
+  try{ document.cookie = k + '=' + encodeURIComponent(s) + ';expires=' + new Date(Date.now() + 315360000000).toUTCString() + ';path=/;SameSite=Lax'; }catch(e){}
+  try{ sessionStorage.setItem(k, s); }catch(e){}
+  wnWrite(rec);
+}
+function readLocal(id){
+  var cands = [], k = attKey(id), i, v, c, w, a, r, best = null;
+  try{ v = localStorage.getItem(k); if(v) cands.push(JSON.parse(v)); }catch(e){}
+  c = cookieRead(k); if(c) cands.push(c);
+  try{ v = sessionStorage.getItem(k); if(v) cands.push(JSON.parse(v)); }catch(e){}
+  w = wnRead(); if(w[id]) cands.push(w[id]);
+  a = regRead();
+  for(i = 0; i < a.length; i++){ if(a[i] && a[i].id === id){ cands.push(a[i]); break; } }
+  for(i = 0; i < cands.length; i++){
+    r = cands[i];
+    if(!r || !r.status) continue;
+    if(!best){ best = r; continue; }
+    if(r.status === 'done' && best.status !== 'done'){ best = r; continue; }
+    if(r.status === best.status && (r.ts || 0) > (best.ts || 0)) best = r;
+  }
+  return best;
+}
+function clearLocalFor(id){
+  var k = attKey(id), i, a, out = [];
+  try{ localStorage.removeItem(k); }catch(e){}
+  try{ sessionStorage.removeItem(k); }catch(e){}
+  cookieDel(k);
+  try{
+    a = regRead();
+    for(i = 0; i < a.length; i++){ if(a[i] && a[i].id !== id) out.push(a[i]); }
+    localStorage.setItem(REG_KEY, JSON.stringify(out));
+  }catch(e){}
+  wnDel(id);
+}
+function clearAllLocal(){
+  var i, k, pref = 'att_' + keyId, cs, nm;
+  try{ for(i = localStorage.length - 1; i >= 0; i--){ k = localStorage.key(i); if(k === REG_KEY || k.indexOf(pref) === 0) localStorage.removeItem(k); } }catch(e){}
+  try{ for(i = sessionStorage.length - 1; i >= 0; i--){ k = sessionStorage.key(i); if(k === REG_KEY || k.indexOf(pref) === 0) sessionStorage.removeItem(k); } }catch(e){}
+  try{
+    cs = document.cookie ? document.cookie.split(';') : [];
+    for(i = 0; i < cs.length; i++){ nm = cs[i].split('=')[0].replace(/^\s+/,''); if(nm.indexOf(pref) === 0) cookieDel(nm); }
+  }catch(e){}
+  try{ window.name = ''; }catch(e){}
+}
+
+/* ================= 7) ХМАРА ================= */
+function cloudCheck(id, cb){
+  var done = false, timer = null;
+  function finish(res){ if(done) return; done = true; if(timer) clearTimeout(timer); cb(res); }
+  try{
+    var url = APPS_SCRIPT_URL + '?action=check&secret=' + encodeURIComponent(SECRET) +
+      '&testId=' + encodeURIComponent(TEST_ID) + '&studentId=' + encodeURIComponent(id);
+    var ctrl = ('AbortController' in window) ? new AbortController() : null;
+    timer = setTimeout(function(){ try{ if(ctrl) ctrl.abort(); }catch(e){} finish(null); }, 4000);
+    fetch(url, ctrl ? {signal: ctrl.signal} : {})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ finish(j && j.ok ? j : null); })
+      .catch(function(){ finish(null); });
+  }catch(e){ finish(null); }
+}
+function cloudUpsert(rec, isFinal, retried){
+  if(!APPS_SCRIPT_URL || !rec) return;
+  function retry(){ if(isFinal && !retried){ setTimeout(function(){ cloudUpsert(rec, true, true); }, 1500); } }
+  try{
+    var url = APPS_SCRIPT_URL + '?action=upsert&secret=' + encodeURIComponent(SECRET) +
+      '&testId=' + encodeURIComponent(TEST_ID) + '&studentId=' + encodeURIComponent(rec.id) +
+      '&name=' + encodeURIComponent(rec.name) + '&group=' + encodeURIComponent(rec.group) +
+      '&class=' + encodeURIComponent(CLASS) + '&topic=' + encodeURIComponent(TOPIC) +
+      '&date=' + encodeURIComponent(rec.date) + '&status=' + encodeURIComponent(rec.status) +
+      '&grade=' + encodeURIComponent(rec.grade) + '&score=' + encodeURIComponent(rec.score) +
+      '&violations=' + encodeURIComponent(rec.violations);
+    fetch(url, {method:'GET', keepalive:true})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(!j || !j.ok) retry(); })
+      .catch(retry);
+  }catch(e){ retry(); }
+}
+function doCheck(id, cb){
+  if(APPS_SCRIPT_URL){
+    cloudCheck(id, function(res){
+      if(res){ cb({exists: !!res.exists, record: res.record || null, source:'cloud'}); }
+      else { var rec = readLocal(id); cb({exists: !!rec, record: rec, source:'local'}); }
+    });
+  } else {
+    var rec = readLocal(id);
+    cb({exists: !!rec, record: rec, source:'local'});
+  }
+}
+
+/* ================= 8) ПОВНОЕКРАННИЙ РЕЖИМ ================= */
+function requestFS(){
+  try{
+    var el = document.documentElement;
+    var fn = el.requestFullscreen || el.webkitRequestFullscreen;
+    if(fn){ var p = fn.call(el); if(p && p.catch) p.catch(function(){}); }
+  }catch(e){}
+}
+function exitFS(){
+  try{
+    if(document.fullscreenElement || document.webkitFullscreenElement){
+      var fn = document.exitFullscreen || document.webkitExitFullscreen;
+      if(fn){ var p = fn.call(document); if(p && p.catch) p.catch(function(){}); }
+    }
+  }catch(e){}
+}
+function fsChanged(){
+  var active = !!(document.fullscreenElement || document.webkitFullscreenElement);
+  if(active){ fsEverEntered = true; document.getElementById('fsOverlay').classList.add('hidden'); return; }
+  if(phase === 'quiz' && fsEverEntered){
+    document.getElementById('fsOverlay').classList.remove('hidden');
+    addViolation();
+  }
+}
+
+/* ================= 9) ПОРУШЕННЯ ================= */
+function toast(msg){
+  var box = document.getElementById('toasts');
+  var t = document.createElement('div');
+  t.className = 'toast'; t.textContent = msg;
+  box.appendChild(t);
+  while(box.children.length > 3){ box.removeChild(box.firstChild); }
+  setTimeout(function(){ if(t.parentNode) t.parentNode.removeChild(t); }, 2600);
+}
+function addViolation(){
+  if(phase !== 'quiz') return;
+  var now = Date.now();
+  if(now - lastViol < 1500) return;
+  lastViol = now;
+  violations++;
+  document.getElementById('vCount').textContent = violations;
+  toast('⚠ Порушення зафіксовано (' + violations + '/' + MAX_VIOLATIONS + ')');
+  if(violations >= MAX_VIOLATIONS){ finishTest('violations'); }
+}
+
+/* ================= 10) СТАРТ ================= */
+function onStartClick(){
+  if(checking || phase === 'quiz') return;
+  var name = document.getElementById('inpName').value.trim().replace(/\s+/g,' ');
+  var err = document.getElementById('nameErr');
+  if(name.split(' ').length < 2 || !name){
+    err.textContent = "Введіть прізвище та ім'я — мінімум 2 слова";
+    document.getElementById('inpName').focus();
+    return;
+  }
+  err.textContent = '';
+  studentName = name;
+  studentGroup = document.getElementById('inpGroup').value.trim();
+  sid = makeSid(name);
+  requestFS();
+  checking = true;
+  var btn = document.getElementById('btnStart');
+  btn.disabled = true; btn.textContent = 'Перевірка…';
+  doCheck(sid, function(res){
+    checking = false; btn.disabled = false; btn.textContent = 'Розпочати тест';
+    if(res.exists){ exitFS(); showBlock(res.record); return; }
+    if(res.source === 'cloud'){ clearLocalFor(sid); }
+    beginQuiz();
+  });
+}
+function showBlock(rec){
+  phase = 'block';
+  document.getElementById('blockName').textContent = '👤 ' + (rec && rec.name ? rec.name : studentName);
+  var info = document.getElementById('blockInfo');
+  if(rec && rec.status === 'done'){ info.textContent = 'Оцінка попередньої спроби: ' + rec.grade + '/' + GRADE_MAX; }
+  else { info.textContent = 'Спробу використано, тест не завершено.'; }
+  document.getElementById('blockDate').textContent = '📅 ' + (rec && rec.date ? rec.date : '');
+  showScreen('screen-block');
+}
+function liveCheck(){
+  if(phase !== 'start' || checking || liveBusy) return;
+  var name = document.getElementById('inpName').value.trim().replace(/\s+/g,' ');
+  if(!name || name.split(' ').length < 2) return;
+  var id = makeSid(name);
+  liveBusy = true;
+  doCheck(id, function(res){
+    liveBusy = false;
+    if(res.exists && phase === 'start'){ studentName = name; showBlock(res.record); }
+  });
+}
+function beginQuiz(){
+  var d = nowDate();
+  currentRec = {id:sid, name:studentName, group:studentGroup, date:d.str, ts:d.ts,
+                status:'progress', grade:'', score:'', violations:0};
+  writeLocal(currentRec);
+  cloudUpsert(currentRec, false, false);
+  answers = []; current = 0; violations = 0; lastViol = 0; correctCount = 0; autoFinished = false; finalGrade = 0;
+  document.getElementById('vCount').textContent = '0';
+  buildOrder();
+  phase = 'quiz';
+  showScreen('screen-quiz');
+  renderQuestion();
+}
+function buildOrder(){
+  var idx = [], i, k, q, opts;
+  for(i = 0; i < QUESTIONS.length; i++) idx.push(i);
+  shuffle(idx);
+  order = [];
+  for(i = 0; i < idx.length; i++){
+    q = QUESTIONS[idx[i]]; opts = [];
+    for(k = 0; k < q.a.length; k++) opts.push({text:q.a[k], ok:k === q.c});
+    shuffle(opts);
+    order.push({qi:idx[i], opts:opts});
+  }
+}
+
+/* ================= 11) ТЕСТ ================= */
+function renderQuestion(){
+  answered = false;
+  var item = order[current], q = QUESTIONS[item.qi], i;
+  document.getElementById('qNum').textContent = pad2(current + 1);
+  document.getElementById('pfill').style.width = ((current + 1) / TOTAL * 100) + '%';
+  var tag = document.getElementById('qTag');
+  tag.textContent = SUBMETA[q.t].label;
+  tag.className = 'tag ' + SUBMETA[q.t].cls;
+  document.getElementById('qLvl').textContent = 'Рівень ' + q.l + '/' + LEVELS;
+  document.getElementById('qText').textContent = q.q;
+  var box = document.getElementById('opts');
+  box.innerHTML = '';
+  for(i = 0; i < item.opts.length; i++){
+    (function(idx){
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'opt';
+      var l = document.createElement('span'); l.className = 'letter'; l.textContent = LETTERS[idx];
+      var t = document.createElement('span'); t.textContent = item.opts[idx].text;
+      b.appendChild(l); b.appendChild(t);
+      b.onclick = function(){ pick(idx); };
+      box.appendChild(b);
+    })(i);
+  }
+  var wrap = document.getElementById('timerWrap');
+  wrap.classList.remove('danger');
+  var arc = document.getElementById('timerArc');
+  arc.style.strokeDasharray = RING_C;
+  arc.style.strokeDashoffset = 0;
+  document.getElementById('timerNum').textContent = QUESTION_TIME;
+  deadline = Date.now() + QUESTION_TIME * 1000;
+  if(tId) clearInterval(tId);
+  tId = setInterval(tick, 100);
+}
+function tick(){
+  if(phase !== 'quiz'){ if(tId){ clearInterval(tId); tId = null; } return; }
+  var rem = deadline - Date.now();
+  if(rem < 0) rem = 0;
+  document.getElementById('timerArc').style.strokeDashoffset = RING_C * (1 - rem / (QUESTION_TIME * 1000));
+  document.getElementById('timerNum').textContent = Math.ceil(rem / 1000);
+  var dangerMs = Math.min(5, QUESTION_TIME / 3) * 1000;
+  var wrap = document.getElementById('timerWrap');
+  if(rem < dangerMs) wrap.classList.add('danger'); else wrap.classList.remove('danger');
+  if(rem <= 0){
+    clearInterval(tId); tId = null;
+    if(!answered){
+      answered = true;
+      answers.push({st:'skip'});
+      setTimeout(advance, 250);
+    }
+  }
+}
+function pick(i){
+  if(phase !== 'quiz' || answered) return;
+  answered = true;
+  if(tId){ clearInterval(tId); tId = null; }
+  var btns = document.getElementById('opts').children, k;
+  for(k = 0; k < btns.length; k++){ btns[k].disabled = true; }
+  btns[i].classList.add('picked');
+  answers.push({st: order[current].opts[i].ok ? 'ok' : 'bad'});
+  setTimeout(advance, 450);
+}
+function advance(){
+  if(phase !== 'quiz') return;
+  current++;
+  if(current >= TOTAL){ finishTest('normal'); }
+  else { renderQuestion(); }
+}
+
+/* ================= 12) ЗАВЕРШЕННЯ ================= */
+function finishTest(reason){
+  if(phase !== 'quiz') return;
+  phase = 'result';
+  if(tId){ clearInterval(tId); tId = null; }
+  document.getElementById('fsOverlay').classList.add('hidden');
+  exitFS();
+  var ok = 0, bad = 0, skip = 0, i, st, d;
+  for(i = 0; i < answers.length; i++){
+    if(answers[i].st === 'ok') ok++;
+    else if(answers[i].st === 'bad') bad++;
+    else skip++;
+  }
+  skip += (TOTAL - answers.length);
+  correctCount = ok;
+  autoFinished = (reason === 'violations');
+  finalGrade = autoFinished ? 0 : Math.round(ok / TOTAL * GRADE_MAX);
+  if(ok === 0) finalGrade = 0;
+  if(currentRec){
+    currentRec.status = 'done';
+    currentRec.grade = finalGrade;
+    currentRec.score = ok;
+    currentRec.violations = violations;
+    writeLocal(currentRec);
+    cloudUpsert(currentRec, true, false);
+  }
+  document.getElementById('resName').textContent = studentName + (studentGroup ? ' • ' + studentGroup : '');
+  document.getElementById('stCorrect').textContent = ok;
+  document.getElementById('stWrong').textContent = bad;
+  document.getElementById('stSkip').textContent = skip;
+  document.getElementById('stViol').textContent = violations;
+  document.getElementById('autoNote').classList.toggle('hidden', !autoFinished);
+  var dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for(i = 0; i < TOTAL; i++){
+    d = document.createElement('span');
+    st = i < answers.length ? answers[i].st : 'skip';
+    d.className = 'dot ' + (st === 'ok' ? 'd-ok' : st === 'bad' ? 'd-bad' : 'd-skip');
+    d.title = 'Питання ' + (i + 1) + ': ' + (st === 'ok' ? 'правильно' : st === 'bad' ? 'помилка' : 'пропуск');
+    dots.appendChild(d);
+  }
+  animateGrade(finalGrade);
+  showScreen('screen-result');
+  sendResults();
+}
+function animateGrade(grade){
+  var arc = document.getElementById('gradeArc');
+  arc.style.strokeDasharray = GRADE_C;
+  arc.style.strokeDashoffset = GRADE_C;
+  var num = document.getElementById('gradeNum');
+  num.textContent = '0';
+  setTimeout(function(){ arc.style.strokeDashoffset = GRADE_C * (1 - grade / GRADE_MAX); }, 100);
+  if(grade > 0){
+    var g = 0, step = Math.max(40, Math.floor(1000 / grade));
+    var iv = setInterval(function(){
+      g++;
+      if(g >= grade){ g = grade; clearInterval(iv); }
+      num.textContent = g;
+    }, step);
+  }
+}
+
+/* ================= 13) TELEGRAM ================= */
+function buildTgText(){
+  var pct = Math.round(correctCount / TOTAL * 100);
+  var parts = [], i, st;
+  for(i = 0; i < TOTAL; i++){
+    st = i < answers.length ? answers[i].st : 'skip';
+    parts.push((i + 1) + (st === 'ok' ? '✔' : st === 'bad' ? '✖' : '⏱'));
+  }
+  var lines = [];
+  lines.push('🧪 Фізика • ' + CLASS + ' клас');
+  lines.push('📚 Тема: ' + TOPIC);
+  lines.push('👤 ' + studentName);
+  lines.push('👥 Група: ' + (studentGroup || '—'));
+  lines.push('📅 ' + (currentRec ? currentRec.date : nowDate().str));
+  lines.push('✅ Правильні: ' + correctCount + '/' + TOTAL + ' (' + pct + '%)');
+  lines.push('🎯 Оцінка: ' + finalGrade + '/' + GRADE_MAX);
+  lines.push('⚠ Порушення: ' + violations + '/' + MAX_VIOLATIONS + (autoFinished ? ' • 🚫 АВТОЗАВЕРШЕННЯ (0 балів)' : ''));
+  lines.push('📝 ' + parts.join(' '));
+  return lines.join('\n');
+}
+function setTgStatus(s){
+  var el = document.getElementById('tgStatus'), btn = document.getElementById('btnRetry');
+  btn.classList.add('hidden');
+  if(s === 'sending'){ el.textContent = '⏳ Надсилання результату вчителю…'; el.className = 'tg-status'; }
+  else if(s === 'ok'){ el.textContent = '✅ Результат надіслано вчителю'; el.className = 'tg-status tg-ok'; }
+  else if(s === 'okb'){ el.textContent = '✅ Результат надіслано (резервний канал)'; el.className = 'tg-status tg-ok'; }
+  else { el.textContent = '⚠️ Не вдалося надіслати результат'; el.className = 'tg-status tg-err'; btn.classList.remove('hidden'); }
+}
+function tgFallback(url, text){
+  try{
+    var body = new URLSearchParams();
+    body.set('chat_id', TG_CHAT);
+    body.set('text', text);
+    if(navigator.sendBeacon && navigator.sendBeacon(url, body)){ setTgStatus('okb'); return; }
+  }catch(e){}
+  setTgStatus('err');
+}
+function sendResults(){
+  setTgStatus('sending');
+  var text = buildTgText();
+  var url = 'https://api.telegram.org/bot' + TG_TOKEN + '/sendMessage';
+  var body = new URLSearchParams();
+  body.set('chat_id', TG_CHAT);
+  body.set('text', text);
+  try{
+    fetch(url, {method:'POST', body:body, keepalive:true})
+      .then(function(r){ return r.json(); })
+      .then(function(j){ if(j && j.ok){ setTgStatus('ok'); } else { tgFallback(url, text); } })
+      .catch(function(){ tgFallback(url, text); });
+  }catch(e){ tgFallback(url, text); }
+}
+
+/* ================= 14) ІНІЦІАЛІЗАЦІЯ (IIFE + try-catch) ================= */
+(function(){
+  /* --- розблокування вчителем (локальне) --- */
+  try{
+    var up = new URLSearchParams(window.location.search).get('unlock');
+    if(up){
+      if(up === 'all'){
+        clearAllLocal();
+        alert('🔓 Вчителю: усі локальні спроби цього тесту очищено на цьому пристрої. Хмарний реєстр (Google Sheets) не змінювався.');
+      } else {
+        var usid = makeSid(up);
+        clearLocalFor(usid);
+        alert('🔓 Вчителю: локальну спробу учня «' + up + '» очищено на цьому пристрої. Хмарний реєстр (Google Sheets) не змінювався.');
+      }
+      try{ window.history.replaceState(null, '', window.location.pathname); }catch(e2){}
+    }
+  }catch(e){}
+  /* --- кнопки та live-перевірка імені --- */
+  try{
+    document.getElementById('btnStart').onclick = onStartClick;
+    document.getElementById('btnBack').onclick = function(){ phase = 'start'; showScreen('screen-start'); };
+    document.getElementById('btnRetry').onclick = function(){ sendResults(); };
+    document.getElementById('btnFs').onclick = function(){ requestFS(); };
+    document.getElementById('inpName').addEventListener('blur', liveCheck);
+    document.getElementById('inpName').addEventListener('keydown', function(e){
+      if(e.key === 'Enter'){ e.preventDefault(); onStartClick(); }
+    });
+  }catch(e){}
+  /* --- тихий захист (активний лише phase==='quiz') --- */
+  try{
+    document.addEventListener('visibilitychange', function(){ if(document.hidden) addViolation(); });
+    window.addEventListener('blur', function(){ addViolation(); });
+    document.addEventListener('fullscreenchange', fsChanged);
+    document.addEventListener('webkitfullscreenchange', fsChanged);
+    document.addEventListener('keydown', function(e){
+      if(phase !== 'quiz') return;
+      var k = (e.key || '').toLowerCase();
+      if(e.key === 'F12'){ e.preventDefault(); addViolation(); return; }
+      if((e.ctrlKey || e.metaKey) && e.shiftKey && (k === 'i' || k === 'j' || k === 'c')){ e.preventDefault(); addViolation(); return; }
+      if((e.ctrlKey || e.metaKey) && (k === 'c' || k === 'v' || k === 'x' || k === 'u' || k === 's' || k === 'p' || k === 'a')){ e.preventDefault(); addViolation(); return; }
+    });
+    document.addEventListener('keyup', function(e){
+      if(phase !== 'quiz') return;
+      if(e.key === 'PrintScreen'){
+        addViolation();
+        try{ if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText('').catch(function(){}); }catch(err){}
+      }
+    });
+    document.addEventListener('contextmenu', function(e){ if(phase === 'quiz'){ e.preventDefault(); addViolation(); } });
+    document.addEventListener('copy', function(e){ if(phase === 'quiz'){ e.preventDefault(); addViolation(); } });
+    document.addEventListener('cut', function(e){ if(phase === 'quiz'){ e.preventDefault(); addViolation(); } });
+    document.addEventListener('paste', function(e){ if(phase === 'quiz'){ e.preventDefault(); addViolation(); } });
+    document.addEventListener('dragstart', function(e){ if(phase === 'quiz'){ e.preventDefault(); addViolation(); } });
+    window.addEventListener('beforeunload', function(e){ if(phase === 'quiz'){ e.preventDefault(); e.returnValue = ''; } });
+  }catch(e){}
+  /* --- canvas: електрони (статичний кадр на мобільних) --- */
+  try{
+    var cv = document.getElementById('bg');
+    if(cv && cv.getContext){
+      var ctx = cv.getContext('2d');
+      var mob = false;
+      try{ mob = window.matchMedia('(pointer: coarse)').matches || window.innerWidth < 700; }catch(e){}
+      var COUNT = mob ? 14 : 64, ps = [], W = 0, H = 0;
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var resize = function(){
+        W = window.innerWidth; H = window.innerHeight;
+        cv.width = W * dpr; cv.height = H * dpr;
+        cv.style.width = W + 'px'; cv.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+      var make = function(){
+        ps = [];
+        for(var i = 0; i < COUNT; i++){
+          ps.push({x:Math.random()*W, y:Math.random()*H, r:1 + Math.random()*2.2,
+            vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
+            h:190 + Math.random()*90, a:.25 + Math.random()*.5});
+        }
+      };
+      var draw = function(){
+        ctx.clearRect(0, 0, W, H);
+        for(var i = 0; i < ps.length; i++){
+          var p = ps[i];
+          ctx.beginPath(); ctx.fillStyle = 'hsla(' + p.h + ',90%,70%,' + (p.a*.25) + ')';
+          ctx.arc(p.x, p.y, p.r*3.2, 0, 6.283); ctx.fill();
+          ctx.beginPath(); ctx.fillStyle = 'hsla(' + p.h + ',95%,75%,' + p.a + ')';
+          ctx.arc(p.x, p.y, p.r, 0, 6.283); ctx.fill();
+        }
+      };
+      var step = function(){
+        for(var i = 0; i < ps.length; i++){
+          var p = ps[i];
+          p.x += p.vx; p.y += p.vy;
+          if(p.x < -10) p.x = W + 10; if(p.x > W + 10) p.x = -10;
+          if(p.y < -10) p.y = H + 10; if(p.y > H + 10) p.y = -10;
+        }
+        draw();
+        requestAnimationFrame(step);
+      };
+      resize(); make(); draw();
+      if(!mob){ requestAnimationFrame(step); }
+      var rt = null;
+      window.addEventListener('resize', function(){
+        if(rt) clearTimeout(rt);
+        rt = setTimeout(function(){ resize(); make(); draw(); }, 200);
+      });
+    }
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
